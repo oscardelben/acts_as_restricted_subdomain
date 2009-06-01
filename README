@@ -1,0 +1,26 @@
+Subdomain Restrictions
+
+A general purpose plugin for limiting a model to a subdomain by way of an
+ActiveRecord model. This is a three pronged approach.
+
+The controller must find the specified model, and raises a 404 if it is not
+found. It also sets the current subdomain into the model for all later access.
+
+The model side of things will restrict all finds to the scope of the
+subdomain, if you want. It's a salt-shaker approach. You know, you salt
+your beans and potatoes but not your steak. It will validate that the
+association exists for all salted models, too.
+
+For convienence, it also provides a looping iterator to evaluate your entire
+Rails application in the scope of each defined subdomain. Just give it a
+block and it will do whatever you want for each site in turn.
+
+The last bit is the session. The session gets all access automatically
+scoped to a subhash keyed on the subdomain as a symbol. That way you can
+log into a site named 'foo' and not be logged into 'bar'.
+
+For a final bit of hotness, when you run a script/console session, there will
+be no restrictions placed on your actions unless you manually call
+YourSubdomain.current = YourSubdomain.find_by_code 'somesite'
+This way you can manually adminster all of the models without any hassle.
+
