@@ -111,7 +111,7 @@ module RestrictedSubdomain
       # the current subdomain is found, gracefully degrades if missing.
       #
       def session
-        if current_subdomain_symbol
+        if((current_subdomain rescue nil))
           request.session[current_subdomain_symbol] ||= {}
           request.session[current_subdomain_symbol]
         else
@@ -124,7 +124,7 @@ module RestrictedSubdomain
       # subdomain symbol, if found. Otherwise works just like normal.
       #
       def session=(*args)
-        if current_subdomain_symbol
+        if((current_subdomain rescue nil))
           request.session[current_subdomain_symbol] ||= {}
           request.session[current_subdomain_symbol] = args
         else
