@@ -75,8 +75,6 @@ module RestrictedSubdomain
     end
     
     module InstanceMethods
-      protected
-      
       ##
       # Returns the current subdomain model. Inspects request.host to figure out
       # the subdomain by splitting on periods and using the first entry. This
