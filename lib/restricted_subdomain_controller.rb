@@ -26,7 +26,7 @@ module RestrictedSubdomain
       # For example, the usage of Agency and :code will work out thusly:
       #
       # In app/controllers/application.rb (or any other!) add:
-      #   use_restricted_subdomain :through => Agency, :by => :code
+      #   use_restricted_subdomain :through => 'Agency', :by => :code
       #
       # 1. Request hits http://secksi.example.com/login
       # 2. Subdomain becomes 'secksi'
@@ -60,13 +60,13 @@ module RestrictedSubdomain
       #
       def use_restricted_subdomains(opts = {})
         options = {
-          :through => Agency,
+          :through => 'Agency',
           :by => :code
         }.merge(opts)
         
         append_before_filter :current_subdomain
         cattr_accessor :subdomain_klass, :subdomain_column
-        self.subdomain_klass = options[:through]
+        self.subdomain_klass = options[:through].constantize
         self.subdomain_column = options[:by]
         helper_method :current_subdomain
         
