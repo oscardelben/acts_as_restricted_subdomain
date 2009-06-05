@@ -36,11 +36,13 @@ module RestrictedSubdomain
         
         self.class_eval <<-RUBY
           def self.each_subdomain(&blk)
+            old_current = self.current
             @_current_subdomains ||= self.find(:all)
             @_current_subdomains.each do |subdomain|
               self.current = subdomain
               yield blk
             end
+            self.current = old_current
           end
         RUBY
       end
