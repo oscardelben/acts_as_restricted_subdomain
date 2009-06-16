@@ -26,7 +26,7 @@ module RestrictedSubdomain
       # For example, the usage of Agency and :code will work out thusly:
       #
       # In app/controllers/application.rb (or any other!) add:
-      #   use_restricted_subdomain :through => 'Agency', :by => :code
+      #   use_restricted_subdomains :through => 'Agency', :by => :code
       #
       # 1. Request hits http://secksi.example.com/login
       # 2. Subdomain becomes 'secksi'
