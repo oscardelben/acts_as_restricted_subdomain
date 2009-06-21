@@ -61,13 +61,16 @@ module RestrictedSubdomain
       def use_restricted_subdomains(opts = {})
         options = {
           :through => 'Agency',
-          :by => :code
+          :by => :code,
+          :use_host => false
         }.merge(opts)
         
         append_before_filter :current_subdomain
-        cattr_accessor :subdomain_klass, :subdomain_column
-        self.subdomain_klass = options[:through].constantize
-        self.subdomain_column = options[:by]
+        cattr_accessor :subdomain_klass, :subdomain_column, :use_host, :options
+        self.subdomain_klass = options.delete(:through).constantize
+        self.subdomain_column = options.delete(:by)
+        self.use_host = options.delete(:use_host)
+        self.options = options
         helper_method :current_subdomain
         
         include RestrictedSubdomain::Controller::InstanceMethods
@@ -82,9 +85,13 @@ module RestrictedSubdomain
       #
       def current_subdomain
         if @_current_subdomain.nil?
-          subname = request.host.split(/\./).first
+          if self.use_host
+            subname = request.host
+          else
+            subname = request.host.split(/\./).first
+          end
           @_current_subdomain = self.subdomain_klass.find :first,
-            :conditions => { self.subdomain_column => subname }
+            { :conditions => { self.subdomain_column => subname } }.merge(self.options)
           raise ActiveRecord::RecordNotFound if @_current_subdomain.nil?
           self.subdomain_klass.current = @_current_subdomain
         end
